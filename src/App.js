@@ -1,78 +1,91 @@
-import React, { useEffect } from 'react'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import Home from './component/Home'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import Login from './component/Login'
-import NavBar from './component/NavBar'
-import Register from './component/Register'
-import Comment from './component/SideOne/Comment'
-import Notify from './component/SideOne/Notify'
-import Chat from './component/SideThree/Chat'
-import Explore from './component/SideTwo/Explore'
-import { useDispatch } from 'react-redux'
-import Postpage from './component/SideTwo/Postpage'
-import CreateProfile from './component/CreateProfile'
-import axios from 'axios'
-import { setLogin } from './features/userSlice'
-import Profile from './component/SideTwo/Profile'
-import Mapfollower from './component/SideTwo/Mapfollower'
-import MapFollowing from './component/SideTwo/MapFollowing'
-import PrivateRoute from './component/SideTwo/PrivateRoute'
-import Loading from './component/SideThree/Loading'
-import ViewProfile from './component/SideTwo/ViewProfile'
-import ViewCover from './component/SideTwo/ViewCover'
-import View from './component/SideTwo/View'
+import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import CustomerForm from './components/CustomerForm';
+import DragAndDrop from './components/DragAndDrop';
+import DropArea1 from './components/DropArea1';
+import DropArea2 from './components/DropArea2';
+import DropArea3 from './components/DropArea3';
+import DropArea4 from './components/DropArea4';
 
-const App = () => {
 
-  const user =  JSON.parse(localStorage.getItem('user'))
-const dispatch = useDispatch()
+const url = 'https://logistics-backend.onrender.com'
 
-useEffect(() => {
- dispatch(setLogin(user))
-}, [])
+function App() {
+  const [customers, setCustomers] = useState([]);
+  const [getid, setGetId] = useState(0)
+  const [reload,setReload] = useState(false);
+  const [moved, setMoved] = useState(false);
+ 
+  const [futureDate, setFutureDate] = useState(new Date());
 
-useEffect(() => {
-  if('user' in localStorage){
-    const login = JSON.parse(localStorage.getItem('user'))
-    axios.defaults.headers.common["authorization"] = `Bearer ${login.token}`
+
+  // Set the date input value to be 7 days ahead of today's date
+  const date = new Date();
+  date.setDate(date.getDate() + 7);
+  const dateString = date.toISOString().substr(0, 10);
+
+
+  // Fetch the list of customers from the server
+  useEffect(() => {
+ 
+    fetch(`${url}/customers`)
+    .then(res => res.json())
+    .then(data => {
+      setCustomers(data);
+      console.log(data)
+    })
+    .catch(err => console.error(err));
+
+  }, []);
+
+
+  if(reload){
+
+    setReload(false)
+    setMoved(false)
+
+    fetch(`${url}/customers`)
+    .then(res => res.json())
+    .then(data => {
+      setCustomers(data);
+      console.log(data)
+    })
+    .catch(err => console.error(err));
+
   }
-}, [user]) 
-
 
   return (
-    <Router basename='/'>
-       <div style={{width: '100vw'}}>
-         <NavBar/>
-             
-       </div>
+    <div className="App" style={{ display: 'flex', gap: '4rem' , width: '100vw', padding: '20px'}}>
+      <div style={{ width: '50vw', textAlign: 'center', fontFamily: 'cursive', }}>
+        <h1>Avana Logistics Company</h1>
+        <h2>Customers Pending Logistics queue</h2>
+        <DragAndDrop moved={moved} setReload={setReload} getid={getid} setGetId={setGetId} customers={customers}/>
+      <CustomerForm setReload={setReload} onAddCustomer={customer => setCustomers([...customers, customer])} />
+      </div>
+
+      <div style={{ width: '50vw', padding: '20px', fontFamily: 'cursive' }}>
+      <h1 style={{ textAlign: 'center'}}>Planner</h1>
+    <div style={{ textAlign: 'center', fontSize:'1.2rem'}}>
+    <label htmlFor="futureDate">Scheduled Date:</label>
+      <input style={{ cursor: 'pointer' }} type="date" id="futureDate" name="futureDate" value={dateString}  />
+     </div>
+        <h2 style={{ textAlign: 'center'}}>Slot 1  </h2>
+        <DropArea1 setMoved={setMoved} getid={getid} customers={customers} />
+        <h2 style={{ textAlign: 'center'}}>Slot 2</h2>
+        <DropArea2 setMoved={setMoved}  getid={getid} customers={customers} />
+        <h2 style={{ textAlign: 'center'}}>Slot 3 </h2>
+        <DropArea3 setMoved={setMoved} getid={getid} customers={customers} />
+        <h2 style={{ textAlign: 'center'}}>Slot 4 </h2>
+        <DropArea4 setMoved={setMoved}  getid={getid} customers={customers} />
+        
+      </div>
       
-       <Routes>
-         <Route path='/' element={<PrivateRoute><Home /></PrivateRoute>} />
-         <Route path='/login' element={<Login/>} />
-         <Route path='/register' element={<Register />} />
-         <Route path='/notify' element={<Notify />} /> 
-         <Route path='/comment/:id' element={ <Comment />} />
-         <Route path='/chat' element={<Chat />} />
-         <Route path='/profile' element={<PrivateRoute ><Profile /></PrivateRoute> } />
-         <Route path='/profile/:id' element={<PrivateRoute ><Profile /></PrivateRoute> } />
-         <Route path='/followers' element={<PrivateRoute ><Mapfollower /></PrivateRoute> } />
-         <Route path='/following' element={<PrivateRoute ><MapFollowing /></PrivateRoute> } />
-         <Route path='/explore' element={<PrivateRoute ><Explore /></PrivateRoute> } />
-         <Route path='/postpage/:id' element={<PrivateRoute ><Postpage /></PrivateRoute> } />
-         <Route path='/postpage' element={<PrivateRoute ><Postpage /></PrivateRoute> } />
-         <Route path='/loading' element={<Loading />   } />
-         <Route path='/view/:id' element={<View/>   } />
-         <Route path='/viewprofile/:id' element={<ViewProfile/>   } />
-         <Route path='/viewcover/:id' element={<ViewCover/>   } />
-         <Route path='/createprofile' element={<CreateProfile />   } />
-         <Route path='/createprofile/:id' element={ <PrivateRoute ><CreateProfile /></PrivateRoute>  } />
-       </Routes>
-        <ToastContainer />
-    </Router>
-   
-  )
+    </div>
+  );
 }
 
-export default App
+
+
+  
+  export default App;
+

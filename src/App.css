@@ -1,0 +1,97 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+  }
+  
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  th,
+  td {
+    text-align: left;
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  th {
+    background-color: #f9f9f9;
+    font-weight: normal;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  td.empty-slot {
+    background-color: #eee;
+  }
+  
+  td.draggable {
+    cursor: move;
+  }
+  
+  h1 {
+    margin-top: 0;
+  }
+  
+  h2 {
+    margin-top: 20px;
+  }
+  
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  
+  form label {
+    flex: 1 1 100%;
+    margin-bottom: 10px;
+  }
+  
+  form label select,
+  form label input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-top: 5px;
+    box-sizing: border-box;
+  }
+  
+  form label select:focus,
+  form label input:focus {
+    outline: none;
+    border-color: #2b93bf;
+  }
+  
+  form button {
+    display: block;
+    background-color: #2b93bf;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  form button:hover {
+    background-color: #246e8b;
+  }
+  
+  .error {
+    color: red;
+    margin-top: 10px;
+  }
