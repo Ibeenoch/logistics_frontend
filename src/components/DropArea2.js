@@ -139,7 +139,7 @@ function DropArea2({ getid, setMoved, customers }) {
   </thead>
   <tbody>
        <tr key={item.id}> 
-       <td id='id' style={{ textAlign: 'center'}} >{item.id}</td>  
+       <td id='id' style={{ textAlign: 'center'}} >{item.customer_id}</td>  
         <td id='name' style={{ textAlign: 'center'}} >{item.name}</td>
         <td id='pickup' style={{ textAlign: 'center'}} >{item.pick_up_location}</td>
         <td id='dropoff' style={{ textAlign: 'center'}} >{item.drop_off_location}</td>
